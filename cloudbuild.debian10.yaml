@@ -1,0 +1,17 @@
+timeout: 1800s
+steps:
+
+- name: gcr.io/cloud-builders/bazel
+  args: ['run', '--host_force_python=PY2', '//base:base']
+- name: gcr.io/cloud-builders/docker
+  args: ['tag', 'bazel/base:base', 'gcr.io/$PROJECT_ID/base:${COMMIT_SHA}']
+
+- name: gcr.io/cloud-builders/bazel
+  args: ['run', '--host_force_python=PY2', '//base:base-debian10']
+- name: gcr.io/cloud-builders/docker
+  args: ['tag', 'bazel/base:base-debian10', 'gcr.io/$PROJECT_ID/base-debian10:${COMMIT_SHA}']
+
+
+images:
+  - 'gcr.io/$PROJECT_ID/base:${COMMIT_SHA}'
+  - 'gcr.io/$PROJECT_ID/base-debian10:${COMMIT_SHA}'
